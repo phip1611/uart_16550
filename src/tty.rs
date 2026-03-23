@@ -12,7 +12,7 @@
 //! See [`Uart16550Tty`].
 
 use crate::backend::{Backend, MmioAddress, MmioBackend, RegisterAddress};
-#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+#[cfg(any(target_arch = "x86", target_arch = "x86_64", doc))]
 use crate::backend::{PioBackend, PortIoAddress};
 use crate::{Config, InitError, InvalidAddressError, LoopbackError, Uart16550};
 use core::error::Error;
@@ -89,7 +89,8 @@ impl<A: RegisterAddress + 'static> Error for Uart16550TtyError<A> {
 #[derive(Debug)]
 pub struct Uart16550Tty<B: Backend>(Uart16550<B>);
 
-#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+#[cfg(any(target_arch = "x86", target_arch = "x86_64", doc))]
+#[cfg_attr(docsrs, doc(cfg(any(target_arch = "x86", target_arch = "x86_64"))))]
 impl Uart16550Tty<PioBackend> {
     /// Creates a new [`Uart16550Tty`] backed by x86 port I/O.
     ///

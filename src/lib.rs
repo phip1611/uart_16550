@@ -1,5 +1,9 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
+// Automatically add badges for cfg feature gates in documentation.
+// https://doc.rust-lang.org/unstable-book/language-features/doc-cfg.html
+#![cfg_attr(docsrs, feature(doc_cfg))]
+
 //! # uart_16550
 //!
 //! Simple yet highly configurable low-level driver for
@@ -142,7 +146,7 @@ pub use crate::error::*;
 pub use crate::tty::*;
 
 use crate::backend::{Backend, MmioAddress, MmioBackend};
-#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+#[cfg(any(target_arch = "x86", target_arch = "x86_64", doc))]
 use crate::backend::{PioBackend, PortIoAddress};
 use crate::spec::registers::{DLL, DLM, FCR, IER, ISR, LCR, LSR, MCR, MSR, SPR, offsets};
 use crate::spec::{FIFO_SIZE, NUM_REGISTERS, calc_baud_rate, calc_divisor};
@@ -244,7 +248,8 @@ pub struct Uart16550<B: Backend> {
     config: Config,
 }
 
-#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+#[cfg(any(target_arch = "x86", target_arch = "x86_64", doc))]
+#[cfg_attr(docsrs, doc(cfg(any(target_arch = "x86", target_arch = "x86_64"))))]
 impl Uart16550<PioBackend> {
     /// Creates a new [`Uart16550`] backed by x86 port I/O.
     ///
