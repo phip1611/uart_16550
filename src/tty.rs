@@ -179,17 +179,14 @@ impl<B: Backend> fmt::Write for Uart16550Tty<B> {
             match byte {
                 // backspace or delete
                 8 | 0x7F => {
-                    self.0.send_bytes_exact(&[8]);
-                    self.0.send_bytes_exact(b" ");
-                    self.0.send_bytes_exact(&[8]);
+                    self.0.send_bytes_exact(&[8, b' ', 8]);
                 }
                 // Normal Rust newlines to terminal-compatible newlines.
                 b'\n' => {
-                    self.0.send_bytes_exact(b"\r");
-                    self.0.send_bytes_exact(b"\n");
+                    self.0.send_bytes_exact(b"\r\n");
                 }
-                data => {
-                    self.0.send_bytes_exact(&[data]);
+                byte => {
+                    self.0.send_bytes_exact(&[byte]);
                 }
             }
         }
