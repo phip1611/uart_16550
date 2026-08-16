@@ -18,6 +18,7 @@ mod uefi {
 mod device;
 mod discovery;
 mod firmware;
+mod preflight;
 mod raw_uart;
 
 use uefi::prelude::*;
@@ -43,7 +44,18 @@ fn main() -> Status {
             candidate.sources
         );
     }
-    uefi::println!("\nDiscovery complete. Press Enter to return to firmware.");
+
+    let preflight = preflight::run(inventory.candidates());
+    let passed = preflight.iter().filter(|result| result.passed).count();
+    uefi::println!(
+        "\nBarebones summary: {passed}/{} candidate(s) passed.",
+        preflight.len()
+    );
+    uefi::println!("Press Enter to return to firmware.");
     firmware::wait_for_enter();
-    Status::SUCCESS
+    if passed == preflight.len() {
+        Status::SUCCESS
+    } else {
+        Status::DEVICE_ERROR
+    }
 }
