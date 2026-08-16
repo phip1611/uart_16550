@@ -22,6 +22,7 @@ impl Display for Address {
 /// Records how discovery found a candidate so duplicate descriptions remain useful.
 pub enum Source {
     RequiredCom1,
+    LegacyProbe,
 }
 
 #[derive(Debug)]

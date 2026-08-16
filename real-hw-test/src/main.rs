@@ -18,6 +18,7 @@ mod uefi {
 mod device;
 mod discovery;
 mod firmware;
+mod raw_uart;
 
 use uefi::prelude::*;
 
