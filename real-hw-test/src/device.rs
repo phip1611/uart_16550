@@ -28,6 +28,12 @@ pub enum Source {
     RequiredCom1,
     LegacyProbe,
     AcpiSpcr,
+    Pci {
+        segment: u32,
+        bus: u8,
+        device: u8,
+        function: u8,
+    },
 }
 
 #[derive(Debug)]

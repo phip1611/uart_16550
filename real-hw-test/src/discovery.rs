@@ -1,19 +1,21 @@
-//! UART discovery through legacy probing and ACPI SPCR.
+//! UART discovery through legacy probing, ACPI SPCR, and PCI enumeration.
 //!
-//! The inventory merges every discovery path so one physical UART is tested
-//! exactly once, however firmware describes it.
+//! Multiple discovery paths cover fixed COM ports and dynamically described
+//! UARTs, including QEMU's independent PCI serial controller.
 
 use crate::device::{Address, Inventory, Source};
 use crate::raw_uart::RawUart;
 use crate::uefi;
 
 mod acpi;
+mod pci;
 
 /// Combines every discovery source into a deduplicated test inventory.
 pub fn discover() -> Inventory {
     let mut inventory = Inventory::default();
     discover_legacy(&mut inventory);
     acpi::discover(&mut inventory);
+    pci::discover(&mut inventory);
     inventory
 }
 
