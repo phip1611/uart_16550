@@ -29,6 +29,11 @@ impl RawUart {
                 }
                 value
             }
+            Address::Mmio { base, stride } => {
+                let address = base + usize::from(offset) * usize::from(stride);
+                // SAFETY: the firmware-provided MMIO range is live while boot services are active.
+                unsafe { core::ptr::read_volatile(address as *const u8) }
+            }
         }
     }
 
@@ -46,6 +51,11 @@ impl RawUart {
                         options(nomem, nostack, preserves_flags)
                     );
                 }
+            }
+            Address::Mmio { base, stride } => {
+                let address = base + usize::from(offset) * usize::from(stride);
+                // SAFETY: the firmware-provided MMIO range is live while boot services are active.
+                unsafe { core::ptr::write_volatile(address as *mut u8, value) };
             }
         }
     }
